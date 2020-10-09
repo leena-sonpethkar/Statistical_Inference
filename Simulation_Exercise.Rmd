@@ -9,28 +9,78 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Overview
+## 1.Overview
 The purpose of this simulation exercise is to investigate the exponential distribution and compare it to the Central Limit Theorem.
 This exercise will investigate the distribution of averages of 40 exponentials over thousand simulations.
 In this exercise, the lambda will be set to 0.2 for all of the simulations. 
 
-## Simulations
+## 2.Simulations
 The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. 
 The mean of exponential distribution is 1/lambda and the standard deviation is also also 1/lambda. 
-lambda will be set to 0.2 for all of the simulations. This simulation will help to investigate the distribution of averages of 40 exponential(0.2)s. Note that you will need to do a thousand or so simulated averages of 40 exponentials.
+lambda will be set to 0.2 for all of the simulations. 
 
 ###Set all the variables
-
-```{r cars}
-summary(cars)
+```{r, echo=TRUE}
+set.seed(20201008)
+lambda <- 0.2
+nExp <- 40
+nSamples <- 1000
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+### Run simulations
+```{r, echo=TRUE}
+simulated_sample <- replicate(nSamples, rexp(nExp, lambda))
+simMean <- apply(simulated_sample, 2, mean)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## 3.Compare Sample Mean versus Theoretical Mean
+
+```{r, echo=TRUE}
+#Calculate Sample Mean
+sample_mean <- mean(simMean)
+
+#Calculate Theoretical Mean
+theo_mean <- 1 / lambda
+```
+
+### Mean Comparison
+```{r, echo=TRUE}
+diff_mean <- abs(sample_mean-theo_mean)
+diff_mean
+```
+The mean of the sample means is  0.05248837 and the theoritical mean is 5. 
+The sample mean and the theoretical mean (expected mean) are very close.
+
+## 4.Compare Variance
+```{r, echo=TRUE}
+#Calculate Sample Variance & Standard deviation
+sample_var <- var(simMean)
+sample_sd <- sd(simMean)
+#Calculate Theoretical Variance & Standard deviation
+theo_var  <- (1 / lambda)^2 / (nExp) 
+theo_sd  <- 1/(lambda * sqrt(nExp))
+```
+The variance of sample means is `r sample_var` and theoretical variance is `r theo_var`. Both these variances are found to close to each other.
+While Standard deviation of sample means is `r sample_sd` and theoretical standard deviation is `r theo_sd`. Again both standard deviations are found to close to each other.
+
+## 5.Distribution
+```{r} 
+library(ggplot2) 
+histdata <- data.frame(simMean)
+m <- ggplot(histdata, aes(x =simMean))
+m <- m + geom_histogram(aes(y=..density..), binwidth = 0.2, colour="grey",
+                        fill = "grey66")
+m <- m + labs(title = "Means Distribution of 40 Samples", x = "Mean of 40 Samples", y = "Density")
+m <- m + geom_vline(aes(xintercept = sample_mean, colour = "sample"))
+m <- m + geom_vline(aes(xintercept = theo_mean, colour = "theoretical"))
+m <- m + stat_function(fun = dnorm, args = list(mean = sample_mean, sd = sample_sd), color = "dark blue", size = 1.5)
+m <- m + stat_function(fun = dnorm, args = list(mean = theo_mean, sd = theo_sd), colour = "red", size = 1.5)
+m
+
+
+
+
+
+```
+
+
