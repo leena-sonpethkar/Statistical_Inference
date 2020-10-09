@@ -15,7 +15,9 @@ This exercise will investigate the distribution of averages of 40 exponentials o
 In this exercise, the lambda will be set to 0.2 for all of the simulations. 
 
 ## Simulations
-The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. The mean of exponential distribution is 1/lambda and the standard deviation is also also 1/lambda. Set lambda = 0.2 for all of the simulations. In this simulation, you will investigate the distribution of averages of 40 exponential(0.2)s. Note that you will need to do a thousand or so simulated averages of 40 exponentials.
+The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. 
+The mean of exponential distribution is 1/lambda and the standard deviation is also also 1/lambda. 
+lambda will be set to 0.2 for all of the simulations. This simulation will help to investigate the distribution of averages of 40 exponential(0.2)s. Note that you will need to do a thousand or so simulated averages of 40 exponentials.
 
 ###Set all the variables
 
